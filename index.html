@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connections - BHOMA Portal</title>
+    
+    <style>
+        /* बिना इंटरनेट के काम करने वाली मुख्य CSS स्टाइल्स */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #0b1528; /* गहरा मुख्य बैकग्राउंड */
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 70px; /* बॉटम बार के लिए जगह */
+        }
+
+        /* मुख्य कंटेनर मोबाइल व्यू के लिए */
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        /* ऊपरी हिस्सा (कार्ड) */
+        .top-card {
+            background-color: #12223d; /* कार्ड का बैकग्राउंड रंग */
+            padding: 24px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            border-bottom: 1px solid #1b2f4c;
+        }
+
+        .top-card h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .top-card p {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* फ़िल्टर टैब्स (बटन) */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tab-btn {
+            border: none;
+            padding: 8px 20px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-active {
+            background-color: #1c5d79; /* नीला सिलेक्टेड बटन रंग */
+            color: #ffffff;
+        }
+
+        .tab-inactive {
+            background-color: #142136;
+            color: #9ca3af;
+            border: 1px solid #1b2f4c;
+        }
+
+        /* निचला हिस्सा (Empty State एरिया) */
+        .content-box {
+            background-color: #0c1424; /* सबसे गहरा निचला बैकग्राउंड रंग */
+            flex: 1;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            text-align: center;
+            border-left: 1px solid #12223d;
+            border-right: 1px solid #12223d;
+            border-bottom: 1px solid #12223d;
+        }
+
+        /* बिना इंटरनेट का बना हुआ कस्टम वाईफाई आइकॉन */
+        .wifi-icon-fallback {
+            width: 70px;
+            height: 50px;
+            border-top: 6px solid #203454;
+            border-radius: 50% 50% 0 0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .wifi-icon-fallback::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            width: 40px;
+            height: 30px;
+            border-top: 6px solid #203454;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .content-box h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+
+        .content-box p {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 8px;
+            max-width: 250px;
+            line-height: 1.5;
+        }
+
+        /* बॉटम फिक्स्ड नेविगेशन बार */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #12223d; /* ओरिजिनल बॉटम बार रंग */
+            border-t: 1px solid #13223d;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+            z-index: 999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* आइकॉन लोड न होने पर छोटे बॉक्स दिखेंगे */
+        .nav-icon-box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-active {
+            color: #3ba2cf; /* एक्टिव मेनू का रंग */
+        }
+
+        .nav-inactive {
+            color: #435570; /* इनएक्टिव मेनू का रंग */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- टॉप कार्ड (शीर्षक और फ़िल्टर) -->
+        <div class="top-card">
+            <h1>Connections</h1>
+            <p>Your verified session history</p>
+            
+            <div class="tabs-container">
+                <button class="tab-btn tab-active">All</button>
+                <button class="tab-btn tab-inactive">Active</button>
+                <button class="tab-btn tab-inactive">Ended</button>
+            </div>
+        </div>
+
+        <!-- मुख्य कंटेंट (खाली स्क्रीन) -->
+        <div class="content-box">
+            <!-- कस्टम निर्मित वाईफाई सिंबल (बिना इंटरनेट के भी दिखेगा) -->
+            <div class="wifi-icon-fallback"></div>
+            <h2>No connections yet</h2>
+            <p>Send a connection request to get started</p>
+        </div>
+
+    </div>
+
+    <!-- निचली नेविगेशन पट्टी -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item nav-inactive">
+            <div class="nav-icon-box"></div>
+            <span>Home</span>
+        </a>
+        <a href="connections.html" class="nav-item nav-active">
+            <div class="nav-icon-box"></div>
+            <span>Connections</span>
+        </a>
+        <a href="#" class="nav-item nav-inactive">
+            <div class="nav-icon-box"></div>
+            <span>Requests</span>
+        </a>
+        <a href="#" class="nav-item nav-inactive">
+            <div class="nav-icon-box"></div>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+</body>
+</html>
